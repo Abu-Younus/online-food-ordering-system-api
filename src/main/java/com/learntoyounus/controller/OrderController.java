@@ -3,7 +3,9 @@ package com.learntoyounus.controller;
 import com.learntoyounus.entity.Order;
 import com.learntoyounus.entity.User;
 import com.learntoyounus.request.OrderRequest;
+import com.learntoyounus.response.PaymentResponse;
 import com.learntoyounus.service.OrderService;
+import com.learntoyounus.service.PaymentService;
 import com.learntoyounus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,16 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @PostMapping("/order")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Order order = orderService.createOrder(orderRequest, user);
+        PaymentResponse response = paymentService.createPaymentLink(order);
 
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/order/user")
