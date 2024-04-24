@@ -34,10 +34,10 @@ public class FoodController {
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<List<Food>> getRestaurantsFood(
             @PathVariable Long restaurantId,
-            @RequestParam boolean isVegetarian,
-            @RequestParam boolean isNonVegetarian,
-            @RequestParam boolean isSeasonal,
-            @RequestParam(required = false) String foodCategory
+            @RequestParam(required = false) boolean isVegetarian,
+            @RequestParam(required = false) boolean isNonVegetarian,
+            @RequestParam(required = false) boolean isSeasonal,
+            @RequestParam String foodCategory
             ) {
         List<Food> foods = foodService.getRestaurantsFood(restaurantId, isVegetarian, isNonVegetarian, isSeasonal, foodCategory);
 

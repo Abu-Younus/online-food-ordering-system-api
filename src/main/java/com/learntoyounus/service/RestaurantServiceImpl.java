@@ -90,7 +90,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public Restaurant getRestaurantByUserId(Long userId) throws Exception {
-        Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
+        Restaurant restaurant = restaurantRepository.findRestaurantByOwnerId(userId);
         if(restaurant == null) {
             throw new Exception("Restaurant not found with owner id " + userId);
         }
@@ -110,7 +110,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         List<RestaurantDto> favourites = user.getFavourites();
         for (RestaurantDto favourite : favourites) {
-            if (Objects.equals(favourite.getId(), restaurantId)) {
+            if (favourite.getId() == restaurantId) {
                 isFavourite = true;
                 break;
             }
@@ -118,7 +118,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         //If the restaurant is already added to favourites, removed it, otherwise add it to favourites
         if(isFavourite) {
-            favourites.removeIf(favourite -> Objects.equals(favourite.getId(), restaurantId));
+            favourites.removeIf(favourite -> favourite.getId() == restaurantId);
         } else {
             favourites.add(restaurantDto);
         }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/category")
+@RequestMapping("/api")
 public class CategoryController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class CategoryController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/admin/category")
     public ResponseEntity<Category> createCategory(@RequestBody Category category, @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Category createdCategory = categoryService.createCategory(category.getName(), user.getId());
@@ -29,10 +29,9 @@ public class CategoryController {
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
-    @GetMapping("/category/restaurant")
-    public ResponseEntity<List<Category>> findCategoryByRestaurantId(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
-        List<Category> categories = categoryService.findCategoryByRestaurantId(user.getId());
+    @GetMapping("/category/restaurant/{id}")
+    public ResponseEntity<List<Category>> findCategoryByRestaurantId(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+        List<Category> categories = categoryService.findCategoryByRestaurantId(id);
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }

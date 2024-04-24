@@ -44,7 +44,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}/add-to-favorites")
-    public ResponseEntity<RestaurantDto> addToFavourites(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<RestaurantDto> addToFavorites(@PathVariable Long id, @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         RestaurantDto restaurantDto = restaurantService.addToFavourites(id, user);
 

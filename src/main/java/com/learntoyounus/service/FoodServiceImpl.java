@@ -8,6 +8,7 @@ import com.learntoyounus.request.FoodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class FoodServiceImpl implements FoodService{
         food.setIngredientsItems(foodRequest.getIngredientsItems());
         food.setSeasonal(foodRequest.isSeasonal());
         food.setVegetarian(foodRequest.isVegetarian());
+        food.setCreationDate(new Date());
 
         Food savedFood = foodRepository.save(food);
         restaurant.getFoods().add(savedFood);
@@ -46,7 +48,7 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public List<Food> getRestaurantsFood(Long restaurantId, boolean isVegetarian, boolean isNonVegetarian, boolean isSeasonal, String foodCategory) {
-        List<Food> foods = foodRepository.findRestaurantById(restaurantId);
+        List<Food> foods = foodRepository.findFoodByRestaurantId(restaurantId);
         if (isVegetarian) {
             foods = filterByVegetarian(foods, isVegetarian);
         }
@@ -56,7 +58,7 @@ public class FoodServiceImpl implements FoodService{
         if(isSeasonal) {
             foods = filterBySeasonal(foods, isSeasonal);
         }
-        if(foodCategory != null && !foodCategory.equals("")) {
+        if(foodCategory != null) {
             foods = filterByCategory(foods, foodCategory);
         }
         return foods;
@@ -75,8 +77,8 @@ public class FoodServiceImpl implements FoodService{
         return foods.stream().filter(food -> food.isSeasonal() == isSeasonal).collect(Collectors.toList());
     }
 
-    private List<Food> filterByNonVegetarian(List<Food> foods, boolean isNonVegetarian) {
-        return foods.stream().filter(food -> food.isVegetarian() == false).collect(Collectors.toList());
+    private List<Food> filterByNonVegetarian(List<Food> foods, boolean isVegetarian) {
+        return foods.stream().filter(food -> food.isVegetarian() == !isVegetarian).collect(Collectors.toList());
     }
 
     private List<Food> filterByVegetarian(List<Food> foods, boolean isVegetarian) {
